@@ -34,6 +34,7 @@ main(int, char**)
    GLFWwindow* window = glfwCreateWindow(1920, 1080, title.data(), nullptr, nullptr);
    if (!window) {
       spdlog::error("Failed to create a glfw window!");
+      return -1;
    }
 
    muz::ScopeExit terminate_window([window]() {
