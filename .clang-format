@@ -77,4 +77,5 @@ SpacesInSquareBrackets: false
 Standard: Latest
 TabWidth: 4
 UseTab: Never
+IndentWidth: 3
 ...
