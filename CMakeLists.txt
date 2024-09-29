@@ -6,7 +6,36 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(USE_STRINGZILLA "Use StringZilla instead of std::string" OFF)
 
-add_subdirectory(third_party)
+# FetchContent is used to download and manage dependencies
+include(FetchContent)
+
+FetchContent_Declare(
+        gl3w
+        GIT_REPOSITORY https://github.com/vladbelousoff/gl3w.git
+        GIT_TAG 1.0.0
+)
+FetchContent_MakeAvailable(gl3w)
+
+FetchContent_Declare(
+        glfw
+        GIT_REPOSITORY https://github.com/glfw/glfw.git
+        GIT_TAG 3.4
+)
+FetchContent_MakeAvailable(glfw)
+
+FetchContent_Declare(
+        glm
+        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        1.0.1
+)
+FetchContent_MakeAvailable(glm)
+
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.14.1
+)
+FetchContent_MakeAvailable(spdlog)
 
 if (MSVC)
     # Suppress "warning C4068: unknown pragma 'GCC'"
@@ -22,6 +51,13 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         gl3w glfw glm::glm spdlog::spdlog)
 
 if (USE_STRINGZILLA)
+    FetchContent_Declare(
+            stringzilla
+            GIT_REPOSITORY https://github.com/someone/stringzilla.git
+            v3.9.8
+    )
+    FetchContent_MakeAvailable(stringzilla)
+
     target_compile_definitions(${PROJECT_NAME} PRIVATE MUZ_USE_STRINGZILLA)
     target_link_libraries(${PROJECT_NAME} PUBLIC stringzilla)
 endif ()
