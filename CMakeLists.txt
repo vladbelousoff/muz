@@ -37,6 +37,29 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(spdlog)
 
+FetchContent_Declare(
+        imgui_external
+        URL https://github.com/ocornut/imgui/archive/refs/tags/v1.91.2-docking.tar.gz
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+
+FetchContent_MakeAvailable(imgui_external)
+
+add_library(
+        imgui
+        ${imgui_external_SOURCE_DIR}/imgui.cpp
+        ${imgui_external_SOURCE_DIR}/imgui_draw.cpp
+        ${imgui_external_SOURCE_DIR}/imgui_tables.cpp
+        ${imgui_external_SOURCE_DIR}/imgui_widgets.cpp
+        ${imgui_external_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+        ${imgui_external_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+)
+
+target_include_directories(imgui PUBLIC ${imgui_external_SOURCE_DIR})
+
+# Link glfw to ImGui so that it can find glfw headers
+target_link_libraries(imgui PUBLIC glfw)
+
 if (MSVC)
     # Suppress "warning C4068: unknown pragma 'GCC'"
     add_compile_options(/wd4068)
@@ -48,7 +71,7 @@ file(GLOB_RECURSE SOURCE_FILES "${PROJECT_NAME}/src/*.cpp")
 add_executable(${PROJECT_NAME} muz.cpp ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_NAME}/include")
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        gl3w glfw glm::glm spdlog::spdlog)
+        gl3w glfw glm::glm spdlog::spdlog imgui)
 
 if (USE_STRINGZILLA)
     FetchContent_Declare(

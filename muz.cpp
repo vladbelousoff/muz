@@ -1,9 +1,12 @@
-#include <GL/gl3w.h>
-#include <GLFW/glfw3.h>
-#include <spdlog/spdlog.h>
-
 #include <muz/scope_exit.h>
 #include <muz/string.h>
+
+#include <GL/gl3w.h>
+#include <GLFW/glfw3.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <imgui.h>
+#include <spdlog/spdlog.h>
 
 int
 main(int, char**)
@@ -48,13 +51,49 @@ main(int, char**)
    // VSYNC
    glfwSwapInterval(1);
 
+   // gl3w
    if (gl3wInit()) {
       spdlog::error("Failed to initialize gl3w!");
       return -1;
    }
 
+   // Setup Dear ImGui context
+   IMGUI_CHECKVERSION();
+
+   ImGui::CreateContext();
+   ImGuiIO& io = ImGui::GetIO();
+   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+   io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+
+   // Setup Dear ImGui style
+   ImGui::StyleColorsLight();
+
+   ImGui_ImplGlfw_InitForOpenGL(window, true);
+   ImGui_ImplOpenGL3_Init("#version 330");
+
+   muz::ScopeExit terminate_imgui([]() {
+      // Some ImGui cleanups here
+      spdlog::info("Terminating ImGui...");
+      ImGui_ImplOpenGL3_Shutdown();
+      ImGui_ImplGlfw_Shutdown();
+      ImGui::DestroyContext();
+   });
+
    // Main loop
    while (!glfwWindowShouldClose(window)) {
+      // Basic render
+
+      glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+      // Start the Dear ImGui frame
+      ImGui_ImplOpenGL3_NewFrame();
+      ImGui_ImplGlfw_NewFrame();
+      ImGui::NewFrame();
+
+      ImGui::Render();
+      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
       glfwSwapBuffers(window);
       glfwPollEvents();
    }
