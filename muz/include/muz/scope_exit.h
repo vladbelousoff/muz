@@ -2,31 +2,26 @@
 
 #include <algorithm>
 
-namespace muz {
-
-   template<typename FuncType>
-   class ScopeExit
+template<typename FuncType>
+class muzScopeExit
+{
+ public:
+   explicit muzScopeExit(FuncType&& func)
+     : func(std::move(func))
    {
-    public:
-      explicit ScopeExit(FuncType&& func)
-        : func(std::move(func))
-      {
-      }
+   }
 
-      ~ScopeExit()
-      {
-         func();
-      }
+   muzScopeExit()
+   {
+      func();
+   }
 
-      ScopeExit(const ScopeExit&) = delete;
-      ScopeExit(ScopeExit&&) = delete;
+   muzScopeExit(const muzScopeExit&) = delete;
+   muzScopeExit(muzScopeExit&&) = delete;
 
-      ScopeExit& operator=(const ScopeExit&) = delete;
-      ScopeExit& operator=(ScopeExit&&) = delete;
+   muzScopeExit& operator=(const muzScopeExit&) = delete;
+   muzScopeExit& operator=(muzScopeExit&&) = delete;
 
-    private:
-      FuncType func;
-   };
-
-} // namespace muz
-
+ private:
+   FuncType func;
+};

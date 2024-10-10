@@ -7,14 +7,10 @@
 #include <string_view>
 #endif
 
-namespace muz {
-
 #ifdef MUZ_USE_STRINGZILLA
-   using String = ashvardanian::stringzilla::string;
-   using StringView = ashvardanian::stringzilla::string_view;
+using muzString = ashvardanian::stringzilla::string;
+using muzStringView = ashvardanian::stringzilla::string_view;
 #else
-   using String = std::string;
-   using StringView = std::string_view;
+using muzString = std::string;
+using muzStringView = std::string_view;
 #endif
-
-} // namespace muz
