@@ -2,18 +2,27 @@
 
 #include <algorithm>
 
-template<typename FuncType>
+/**
+ * @brief A helper class that guarantees a function is executed when the scope exits.
+ *
+ * This class takes a callable object (a function, lambda, etc.) as a parameter and ensures
+ * that it is executed when the object goes out of scope. This is useful for performing
+ * cleanup operations or ensuring that resources are released at the end of a scope.
+ *
+ * @tparam FunctionType The type of the callable object.
+ */
+template<typename FunctionType>
 class muzScopeExit
 {
  public:
-   explicit muzScopeExit(FuncType&& func)
-     : func(std::move(func))
+   explicit muzScopeExit(FunctionType&& function)
+     : function(std::forward<FunctionType>(function))
    {
    }
 
-   muzScopeExit()
+   ~muzScopeExit()
    {
-      func();
+      function();
    }
 
    muzScopeExit(const muzScopeExit&) = delete;
@@ -23,5 +32,5 @@ class muzScopeExit
    muzScopeExit& operator=(muzScopeExit&&) = delete;
 
  private:
-   FuncType func;
+   FunctionType function;
 };
