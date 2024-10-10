@@ -26,9 +26,9 @@ class muzScopeExit
    }
 
    muzScopeExit(const muzScopeExit&) = delete;
-   muzScopeExit(muzScopeExit&&) = delete;
-
    muzScopeExit& operator=(const muzScopeExit&) = delete;
+
+   muzScopeExit(muzScopeExit&&) = delete;
    muzScopeExit& operator=(muzScopeExit&&) = delete;
 
  private:
